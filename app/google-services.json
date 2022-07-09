@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "143234789171",
+    "project_id": "capstonr-reader-book",
+    "storage_bucket": "capstonr-reader-book.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143234789171:android:397e4c63f2a36b40e45846",
+        "android_client_info": {
+          "package_name": "com.example.capstonrreaderbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143234789171-gfdfb7pb02iuuh1vbs3u4760ohvpoq2v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_zuk2DdmkWAg7Q4EawoKl7Q725INStGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143234789171-gfdfb7pb02iuuh1vbs3u4760ohvpoq2v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
