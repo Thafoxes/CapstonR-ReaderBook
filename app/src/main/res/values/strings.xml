@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Capstonr Reader Book</string>
+    <string name="app_name">Capston Reader Book</string>
+    <string name="author">Jason Wong</string>
 </resources>

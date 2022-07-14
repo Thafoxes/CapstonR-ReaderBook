@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.capstonrreaderbook.navigation.ReaderNavigation
 import com.example.capstonrreaderbook.ui.theme.CapstonrReaderBookTheme
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -35,8 +36,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun ReaderApp() {
-
+    @Composable
+    fun ReaderApp() {
+        ReaderNavigation()
     }
 }
 

@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+<!--    my material colour here -->
+    <color name="primaryColor">#b71c1c</color>
+    <color name="primaryLightColor">#f05545</color>
+    <color name="primaryDarkColor">#7f0000</color>
+    <color name="secondaryColor">#880e4f</color>
+    <color name="secondaryLightColor">#bc477b</color>
+    <color name="secondaryDarkColor">#560027</color>
+<!--    Text color-->
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#ffffff</color>
 </resources>

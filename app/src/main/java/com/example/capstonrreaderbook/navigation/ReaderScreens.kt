@@ -8,6 +8,7 @@ enum class ReaderScreens {
     SettingScreen,
     DetailScreen,
     UpdateScreen,
+    ForgotPasswordScreen,
     ReaderStatsScreen;
 
     companion object {
@@ -19,6 +20,7 @@ enum class ReaderScreens {
             SettingScreen.name -> SettingScreen
             DetailScreen.name -> DetailScreen
             UpdateScreen.name -> UpdateScreen
+            ForgotPasswordScreen.name -> ForgotPasswordScreen
             ReaderStatsScreen.name -> ReaderStatsScreen
             null -> MainScreen
             else -> throw IllegalArgumentException("Route $route is not recognised!")

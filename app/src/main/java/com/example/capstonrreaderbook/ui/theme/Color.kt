@@ -6,3 +6,6 @@ val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)
 val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
+// my theme here
+//https://material.io/resources/color/#!/?view.left=1&view.right=0&primary.color=B71C1C&secondary.color=880E4F
+

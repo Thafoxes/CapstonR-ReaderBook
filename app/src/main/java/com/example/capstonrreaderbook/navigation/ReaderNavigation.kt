@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.capstonrreaderbook.screens.Register.RegisterScreen
 import com.example.capstonrreaderbook.screens.details.DetailScreen
+import com.example.capstonrreaderbook.screens.forgotpwd.ForgotPasswordScreen
 import com.example.capstonrreaderbook.screens.login.LoginScreen
 import com.example.capstonrreaderbook.screens.main.MainScreen
 import com.example.capstonrreaderbook.screens.setting.SettingScreen
@@ -39,6 +40,10 @@ fun ReaderNavigation() {
 
         composable(route = ReaderScreens.DetailScreen.name){
             DetailScreen(navController = navController)
+        }
+
+        composable(route = ReaderScreens.ForgotPasswordScreen.name){
+            ForgotPasswordScreen(navController = navController)
         }
 
 
