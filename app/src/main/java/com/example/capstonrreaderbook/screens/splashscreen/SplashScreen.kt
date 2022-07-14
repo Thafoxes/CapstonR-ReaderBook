@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.capstonrreaderbook.R
 import com.example.capstonrreaderbook.navigation.ReaderScreens
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
 
@@ -47,13 +48,20 @@ fun SplashScreen(navController: NavController){
                 durationMillis = 800,
                 delayMillis = 500,
                 easing =
-//                    OvershootInterpolator(8f).getInterpolation(it)
+
                     LinearOutSlowInEasing
                 )
         )
         delay(1000L)
-        navController.navigate(ReaderScreens.LoginScreen.name){
-            popUpTo(ReaderScreens.SplashScreen.name) { inclusive = true }
+
+        if(FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()) {
+            navController.navigate(ReaderScreens.LoginScreen.name) {
+                popUpTo(ReaderScreens.SplashScreen.name) { inclusive = true }
+            }
+        }else{
+            navController.navigate(ReaderScreens.MainScreen.name) {
+                popUpTo(ReaderScreens.SplashScreen.name) { inclusive = true }
+            }
         }
 
     }

@@ -1,8 +1,6 @@
 package com.example.capstonrreaderbook.screens.login
 
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -27,11 +25,13 @@ import com.example.capstonrreaderbook.components.ButtonLogin
 import com.example.capstonrreaderbook.components.HyperLinkPage
 import com.example.capstonrreaderbook.components.OutlineTextFieldInputs
 import com.example.capstonrreaderbook.navigation.ReaderScreens
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun LoginScreen(navController: NavController){
+fun LoginScreen(navController: NavController,
+                viewModel: AuthViewModel = viewModel()){
 
-    val emailOrUsername = remember{
+    val email = remember{
         mutableStateOf("")
     }
     val password = remember{
@@ -61,15 +61,16 @@ fun LoginScreen(navController: NavController){
                 ) {
 
                 Text(
-                    "Login email or username",
+                    "Login email",
                     modifier = Modifier.padding(3.dp),
                     style = MaterialTheme.typography.h6,
                     textDecoration = TextDecoration.None,
                 )
 
                 OutlineTextFieldInputs(
-                    textState = emailOrUsername,
-
+                    textState = email,
+                    labelTextField = "Email",
+                    placeholderTextField = "Enter your email here"
                     )
                 OutlineTextFieldInputs(
                     textState = password,
@@ -87,20 +88,24 @@ fun LoginScreen(navController: NavController){
                     textAlign = TextAlign.Start,
                     color = Color.DarkGray.copy(0.8f),
                     textDecoration = TextDecoration.None,
-                    modifier = Modifier.padding(8.dp).fillMaxWidth()
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
                 ){
                     Toast.makeText(context, "Go Restore Password", Toast.LENGTH_LONG).show()
                 }
 
                 ButtonLogin(buttonText = "Log in"){
-                    if (password.value.isNullOrEmpty() || emailOrUsername.value.isNullOrEmpty()) {
+                    if (password.value.isNullOrEmpty() || email.value.isNullOrEmpty()) {
                         Toast.makeText(context, "information not fill in", Toast.LENGTH_LONG).show()
 
                     } else {
 //                        do firebase authentication here
-                        Log.d("inputcheck ", "${password.value} and username is ${emailOrUsername.value}")
+                        viewModel.LoginUser(email = email.value, password = password.value){
+                            navController.navigate(ReaderScreens.MainScreen.name)
+                        }
                         password.value = ""
-                        emailOrUsername.value = ""
+                        email.value = ""
                     }
                 }
 
