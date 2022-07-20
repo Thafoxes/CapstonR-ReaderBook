@@ -13,7 +13,8 @@ data class MBook (
     var publicRating: Int? = null,
     var isTrending: Boolean? = false,
     var bookThumbnail: Int? = R.drawable.see_more,
-    var notBook: Boolean = false
+    var notBook: Boolean = false,
+    var genre: List<String> = emptyList()
 
 
     )
