@@ -237,6 +237,8 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel = androi
                             password = password.value,
                             phoneNumber = phoneNumber.value
                             ){
+
+                            Toast.makeText(context, "registered successfully", Toast.LENGTH_SHORT).show()
                             navController.navigate(ReaderScreens.MainScreen.name)
                         }
                         keyboardController?.hide()

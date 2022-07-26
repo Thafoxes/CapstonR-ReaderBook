@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,28 +20,36 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.capstonrreaderbook.R
+import com.example.capstonrreaderbook.components.BookCardTest
 import com.example.capstonrreaderbook.components.DrawerButton
 import com.example.capstonrreaderbook.components.SubTitleConfig
-import com.example.capstonrreaderbook.model.MBook
-import com.example.capstonrreaderbook.model.getEmptyBookData
-import com.example.capstonrreaderbook.model.getMBookData
+import com.example.capstonrreaderbook.model.Item
 import com.example.capstonrreaderbook.navigation.ReaderScreens
+import com.example.capstonrreaderbook.screens.search.BookSearchViewModel
+import com.example.capstonrreaderbook.tools.CheckImageExist
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainScreen(navController: NavController){
+fun MainScreen(
+    navController: NavController,
+    viewModel: BookSearchViewModel = hiltViewModel(),
+               ){
+
+
+
     val emailUser = if(!FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
         FirebaseAuth.getInstance().currentUser?.email
     }else{
@@ -50,8 +59,10 @@ fun MainScreen(navController: NavController){
         "Jason"
     }
     val scaffoldState = rememberScaffoldState()
+    val popularBooks = viewModel.bookList
     val scope = rememberCoroutineScope()
     val backgroundColor = colorResource(id = R.color.primaryColor)
+
 
         Scaffold(
             modifier = Modifier
@@ -66,6 +77,8 @@ fun MainScreen(navController: NavController){
             },
 
         ) {
+
+
             Surface(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -86,30 +99,54 @@ fun MainScreen(navController: NavController){
                             item {
                                 //type of text
                                 SubTitleConfig("Discover new books")
-                                val bookData = getMBookData()
-                                LazyRow{
-                                    items(bookData.size){
-                                        index ->
-                                        BookCard(bookData[index])
-                                    }
-                                    item {
-                                        BookCard(getEmptyBookData())
+                                //search popular books
+
+                                    if(!viewModel.isLoading){
+
+                                        LazyRow{
+
+                                            items(popularBooks){
+                                                    index ->
+
+                                                BookCard(index){
+                                                    navController.navigate(ReaderScreens.DetailScreen.name + "/${index.id}")
+                                                }
+                                            }
+                                            item {
+                                                BookCardTest(){
+                                                    navController.navigate(ReaderScreens.SearchScreen.name)
+                                                }
+                                            }
+
+                                        }
+                                    }else{
+                                        CircularProgressIndicator()
                                     }
 
-                                }
+
                                 Divider(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                                     thickness = 1.dp,
                                     color = colorResource(id =R.color.primaryTextColor)
                                 )
                                 SubTitleConfig("Continue your reading")
+                                //todo here
                                 LazyRow{
-                                   items(bookData.size-2){
-                                       index -> BookCard(bookData[index])
-                                   }
-                                    item {
-                                       BookCard(getEmptyBookData(bookTitle = "history"))
+
+                                    items(popularBooks){
+                                            index ->
+
+                                        BookCard(index){
+                                            navController.navigate(ReaderScreens.DetailScreen.name + "/${index.id}")
+                                        }
                                     }
+                                    item {
+                                        BookCardTest(){
+                                            navController.navigate(ReaderScreens.SearchScreen.name)
+                                        }
+                                    }
+
                                 }
+
                             }
                         }
 
@@ -125,44 +162,33 @@ fun MainScreen(navController: NavController){
 }
 
 
-@Preview
+
 @Composable
-fun BookCard(bookData: MBook = getMBookData()[0], onClick : () -> Unit = {}) {
+fun BookCard(bookData: Item, onClick : () -> Unit = {}) {
+
+
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable {
-                if (bookData.notBook) {
-                    Log.d("book", "browser more book")
-                } else {
-
-                    Log.d("book", "got book ${bookData.bookTitle}")
-                }
-            },
+            .clickable(onClick = onClick),
         elevation = 5.dp,
         shape = RoundedCornerShape(23.dp),
     ) {
 
         Box(modifier = Modifier.padding(0.dp)) {
             Column {
-                Box(
-                    modifier = Modifier.height(height = 250.dp),
+                Column(
+                    modifier = Modifier.height(150.dp)
                     ){
-                    Image(
-                        //painter = rememberImagePainter(data = ""),
 
-                        painter = painterResource(id =
-                        if(bookData.bookThumbnail != null){
-                            bookData.bookThumbnail!!
-                        }else{
-                            R.drawable.see_more
-                        }),
-                        contentDescription = "book for ${bookData.bookTitle!!}",
-                        modifier = Modifier.fillMaxHeight(),
-                        contentScale = ContentScale.FillHeight,
+                    Image(
+                        painter = rememberImagePainter(data = CheckImageExist(bookData)),
+                        contentDescription = "book for ${bookData.volumeInfo.title}",
+                        modifier = Modifier.height(150.dp),
+                        contentScale = ContentScale.Crop
 
                     )
-                    if(bookData.isTrending == true){
+                    if(bookData.volumeInfo.averageRating >= 4.0){
                         RoundedBookTrendingIcon()
                     }
                 }
@@ -175,42 +201,49 @@ fun BookCard(bookData: MBook = getMBookData()[0], onClick : () -> Unit = {}) {
                 ) {
                     Column {
                         Text(
-                            text = if(!bookData.bookTitle.isNullOrEmpty()){
-                                bookData.bookTitle!!
+                            text = if(!bookData.volumeInfo.title.isEmpty()){
+                                bookData.volumeInfo.title
                             }else{
                                  ""
                                  },
                             modifier = Modifier,
                             style = TextStyle(
                                 color = Color.Black,
-                                fontSize = 15.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold
                             ),
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
-                            text = if(!bookData.bookAuthor.isNullOrEmpty()){
-                                "by ${bookData.bookAuthor!!}"
+                            text = if(!bookData.volumeInfo.authors.isNullOrEmpty()){
+                                buildAnnotatedString {
+                                    bookData.volumeInfo.authors.forEach {
+
+                                        append(" ${it} ,")
+                                    }
+                                }
                             }else{
-                                 ""
+                                 buildAnnotatedString {
+                                     append("")
+                                 }
                             },
                             style = TextStyle(
                                 color = Color.Black,
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                             ),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
                         Text(
-                            text = if(bookData.publicRating != null){
-                                "rating: ${bookData.publicRating!!} out of 5⭐"
+                            text = if(bookData.volumeInfo.ratingsCount != 0){
+                                "rating: ${bookData.volumeInfo.ratingsCount} out of 5⭐"
                             }else{
                                  ""
                                  },
                             style = TextStyle(
                                 color = Color.Black,
-                                fontSize = 10.sp,
+                                fontSize = 7.sp,
                             )
                         )
 
@@ -224,10 +257,12 @@ fun BookCard(bookData: MBook = getMBookData()[0], onClick : () -> Unit = {}) {
     }
 }
 
-@Preview(showBackground = true)
+
+
+
 @Composable
 fun RoundedBookTrendingIcon(
-    label: String = "Trending",
+    label: String = "Popular",
     color: Color = colorResource(id = R.color.primaryLightColor),
     radius : Int = 39
 ){
@@ -281,14 +316,7 @@ fun DrawerContent(
         iconDescription = "Favourites",
         textDescription = "Favourites"
     )
-    DrawerButton(
-        navRoute = {
-            navController.navigate(ReaderScreens.InfoScreen.name)
-        },
-        imageVector = Icons.Filled.BookOnline,
-        iconDescription = "Browse screen",
-        textDescription = "Browse book"
-    )
+
     DrawerButton(
         navRoute = {
            navController.navigate(ReaderScreens.InfoScreen.name)

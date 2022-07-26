@@ -83,7 +83,7 @@ fun ReturnButton(navController: NavController, onClicked: () -> Unit = { navCont
         Icon(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Return icon",
-            modifier = Modifier.padding(end = 10.dp),
+            modifier = Modifier.padding(end = 10.dp, bottom = 10.dp),
         )
         Text(text = "Return", style = MaterialTheme.typography.h6)
     }

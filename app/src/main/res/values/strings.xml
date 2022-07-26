@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Capston Reader Book</string>
     <string name="author">Jason Wong</string>
+    <string name="Info">Capston Reader Book - an application to find good books</string>
 </resources>
